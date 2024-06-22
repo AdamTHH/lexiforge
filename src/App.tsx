@@ -36,7 +36,6 @@ const App: FC = () => {
 
   useEffect(() => {
     updateWords(words)
-    console.log(import.meta.env.VITE_ANTHROPIC_API_KEY)
   }, [words]);
 
   useEffect(() => {
@@ -111,10 +110,18 @@ const App: FC = () => {
 
     const word2: IWordOnCanvas = findInWords(otherId);
 
+    word1.x = newX;
+    word1.y = newY;
+
+    combineWords(word1, word2)
+  }
+
+  function combineWords(word1: IWordOnCanvas, word2: IWordOnCanvas) {
     const word1Data = findInWordLibrary(word1.title).wordData
     const word2Data = findInWordLibrary(word2.title).wordData
-    const XforNewWord = word2.x + (newX - word2.x) / 2
-    const YforNewWord = word2.y + (newY - word2.y) / 2
+
+    const XforNewWord = word2.x + (word1.x - word2.x) / 2
+    const YforNewWord = word2.y + (word1.y - word2.y) / 2
 
     let newWords = words.filter(item => item.canvasID !== word1.canvasID && item.canvasID !== word2.canvasID);
 
@@ -281,7 +288,7 @@ const App: FC = () => {
       </div>
 
       {wordLibrary.length === 4
-      ? <p className='lg:text-5xl absolute top-1/2 left-1/2 wordtitle select-none z-0 lg:translate-x-[0%] translate-x-[-50%] translate-y-[-50%] text-slate-500 opacity-25 lg:w-1/3 break-words w-4/5 text-3xl'>Drag the words to the canvas and combine them!</p> : <></>}
+        ? <p className='lg:text-5xl absolute top-1/2 left-1/2 wordtitle select-none z-0 lg:translate-x-[0%] translate-x-[-50%] translate-y-[-50%] text-slate-500 opacity-25 lg:w-1/3 break-words w-4/5 text-3xl'>Drag the words to the canvas and combine them!</p> : <></>}
 
       <div className='absolute
       lg:left-96 lg:bottom-0 m-3 right-0'>
@@ -289,7 +296,7 @@ const App: FC = () => {
           ? <Tooltip label="Unlock the built in words + create your own!">
             <motion.button
               whileTap={{ scale: 0.9 }}
-              whileHover={{opacity:0.8}}
+              whileHover={{ opacity: 0.8 }}
               transition={{ duration: 0.05 }}
               onClick={() => { setMode("playground"); setWordLibrary(wordLibrary.concat(defaultCombinationsAsList().filter((n) => wordLibrary.every((value) => value.wordData.title !== n.wordData.title)))) }} className="bg-transparent items-center justify-center flex">
               <p className='kode-mono-semibold text-neutral-500 dark:text-neutral-400 select-none'>
@@ -300,14 +307,14 @@ const App: FC = () => {
 
           : <motion.button
             whileTap={{ scale: 0.9 }}
-            whileHover={{opacity:0.8}}
+            whileHover={{ opacity: 0.8 }}
             transition={{ duration: 0.05 }}
             onClick={() => {
-            const discoveredWords = wordLibrary.filter((n) => defaultCombinationsAsList().every((value) => value.wordData.title !== n.wordData.title));
-            setWordLibrary(discoveredWords);
-            setMode("normal");
-            setWords(words.filter((w) => discoveredWords.some((value) => value.wordData.title === w.title)))
-          }}>
+              const discoveredWords = wordLibrary.filter((n) => defaultCombinationsAsList().every((value) => value.wordData.title !== n.wordData.title));
+              setWordLibrary(discoveredWords);
+              setMode("normal");
+              setWords(words.filter((w) => discoveredWords.some((value) => value.wordData.title === w.title)))
+            }}>
             <p className='kode-mono-semibold text-neutral-500 dark:text-neutral-400 select-none'>
               🔍 Normal mode
             </p></motion.button>}

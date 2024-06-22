@@ -1,13 +1,13 @@
 export default async function generateNewWord(prompt:string) {
 
-    const url = 'https://thingproxy.freeboard.io/fetch/https://api.anthropic.com/v1/messages';
+    const url = '/api';
     //dev: https://thingproxy.freeboard.io/fetch/https://api.anthropic.com/v1/messages
 
     const response = await fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'x-api-key': "",
+            'x-api-key': import.meta.env.VITE_ANTHROPIC_API_KEY,
             'anthropic-version': '2023-06-01'
         },
         body: JSON.stringify({

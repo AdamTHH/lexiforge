@@ -1,7 +1,7 @@
 async function generateImage(prompt: string) {
     console.log("generating image: " + prompt);
     const myHeaders = new Headers();
-    myHeaders.append("apikey", "XZ_aB9QwhsxSWqMiuqn4tw");
+    myHeaders.append("apikey", import.meta.env.VITE_STABLEHORDE_API_KEY);
     myHeaders.append("Content-Type", "application/json");
   
     const raw = JSON.stringify({

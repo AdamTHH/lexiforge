@@ -36,6 +36,7 @@ const App: FC = () => {
 
   useEffect(() => {
     updateWords(words)
+    console.log(import.meta.env.VITE_ANTHROPIC_API_KEY)
   }, [words]);
 
   useEffect(() => {

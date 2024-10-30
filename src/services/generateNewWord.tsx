@@ -1,21 +1,23 @@
-import Anthropic from "@anthropic-ai/sdk";
+
 
 export default async function generateNewWord(prompt: string) {
 
     const url = '/claude';
 
-    const headers = {
-        'secret': "rDv7[KpNGzwYTeQ~;d>*M@"
-    };
+    const myHeaders = new Headers();
+    myHeaders.append("secret", "rDv7[KpNGzwYTeQ~;d>*M@");
+    myHeaders.append("Content-Type", "application/json");
+
     const body = {
-        "prompt":prompt
+        "prompt": prompt
     }
 
     try {
         const response = await fetch(url, {
             method: 'POST',
-            headers: headers,
-            body: JSON.stringify(body)
+            headers: myHeaders,
+            body: JSON.stringify(body),
+            redirect: "follow"
         });
         
         if (response.ok) {

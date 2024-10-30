@@ -3,6 +3,10 @@
       {
         "source": "/claude",
         "destination": "https://express-apis-ten.vercel.app/api/mobile/claude"
+      },
+      {
+        "source": "/textToImage",
+        "destination": "https://express-apis-ten.vercel.app/api/mobile/textToImage"
       }
     ]
 }

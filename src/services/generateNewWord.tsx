@@ -1,32 +1,33 @@
-export default async function generateNewWord(prompt:string) {
+import Anthropic from "@anthropic-ai/sdk";
 
-    const url = '/api';
-    //dev: https://thingproxy.freeboard.io/fetch/https://api.anthropic.com/v1/messages
+export default async function generateNewWord(prompt: string) {
 
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'x-api-key': import.meta.env.VITE_ANTHROPIC_API_KEY,
-            'anthropic-version': '2023-06-01'
-        },
-        body: JSON.stringify({
-            model: 'claude-3-haiku-20240307',
-            max_tokens: 1024,
-            system: "Your job is to combine the given words into a third element. This should be either a real life object or something made up based on those 2 words. You must not concatenate the words ('A+B' must not equal 'AB'). Generate Stable Diffusion prompt based on the new word (max 20 words). Reply ONLY with a JSON like:\"\n{\"newWord\":\"\",\"isARealWord\": true/false,\"sdprompt\":\"\"}\n\"",
-            messages: [
-                {
-                    role: 'user',
-                    content: prompt
-                }
-            ]
-        })
-    })
+    const url = '/claude';
 
-    if (!response.ok) {
-        throw new Error('An error happened while fetching Claude');
+    const headers = {
+        'secret': "rDv7[KpNGzwYTeQ~;d>*M@"
+    };
+    const body = {
+        "prompt":prompt
     }
-    
-    const data = await response.json();
-    return data;
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(body)
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            const jsonString = "{" + data.content[0].text;
+            return JSON.parse(jsonString);
+        } else {
+            console.error('Error:', await response.text());
+            throw new Error(`Error: ${response.status}`);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
 }

@@ -70,12 +70,11 @@ const DraggableComponent: any = ({ id, onPositionChange, onDragEnd, onWordGenera
 
   const generateWord = async (startPrompt: string) => {
     try {
-      const result = await generateNewWord(startPrompt)
-      console.log(result.content[0].text)
-      let generatedWordData = JSON.parse(result.content[0].text);
+      const result:any = await generateNewWord(startPrompt)
+      let generatedWordData = result;
 
       delete Object.assign(generatedWordData, { ["title"]: generatedWordData["newWord"] })["newWord"];
-      delete Object.assign(generatedWordData, { ["description"]: generatedWordData["sdprompt"] })["sdprompt"];
+      delete Object.assign(generatedWordData, { ["sdPrompt"]: generatedWordData["sdprompt"] })["sdprompt"];
 
       generatedWordData.title = generatedWordData.title.toLowerCase();
       generatedWordData.img = "";

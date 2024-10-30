@@ -9,20 +9,19 @@ async function generateImage(prompt: string) {
     "prompt": prompt
   }
 
-  const timeout = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error('Request timeout')), 300000) // 5 minute timeout
-  );
-
   try {
-    const response:any = await Promise.race([
-      fetch(url, {
-        method: 'POST',
-        headers: myHeaders,
-        body: JSON.stringify(body),
-        redirect: "follow"
-      }),
-      timeout
-    ]);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 6000);
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: myHeaders,
+      body: JSON.stringify(body),
+      redirect: "follow",
+      signal: controller.signal
+    });
+
+    clearTimeout(timeoutId);
 
     if (response.ok) {
       const data = await response.json();
@@ -39,13 +38,8 @@ async function generateImage(prompt: string) {
 }
 
 function toDataURLPromise(answer: any) {
-  return new Promise((resolve, reject) => {
-    const timeoutId = setTimeout(() => {
-      reject(new Error('Conversion timeout'));
-    }, 300000); // 5 minute timeout
-
+  return new Promise((resolve) => {
     toDataURL(answer, function (result: any) {
-      clearTimeout(timeoutId);
       resolve(result);
     });
   });
@@ -53,16 +47,12 @@ function toDataURLPromise(answer: any) {
 
 async function toDataURL(url: string, callback: any) {
   var xhr = new XMLHttpRequest();
-  xhr.timeout = 300000; // 5 minute timeout
   xhr.onload = function () {
     var reader = new FileReader();
     reader.onloadend = function () {
       callback(reader.result);
     }
     reader.readAsDataURL(xhr.response);
-  };
-  xhr.ontimeout = function () {
-    callback(new Error('XHR timeout'));
   };
   xhr.open('GET', url);
   xhr.responseType = 'blob';

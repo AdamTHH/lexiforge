@@ -22,7 +22,7 @@ export default async function generateNewWord(prompt: string) {
         
         if (response.ok) {
             const data = await response.json();
-            return JSON.parse(data);
+            return data;
         } else {
             console.error('Error:', await response.text());
             throw new Error(`Error: ${response.status}`);

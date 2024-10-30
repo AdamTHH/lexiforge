@@ -22,6 +22,7 @@ export default async function generateNewWord(prompt: string) {
         
         if (response.ok) {
             const data = await response.json();
+            console.log(data);
             const jsonString = "{" + data.content[0].text;
             return JSON.parse(jsonString);
         } else {

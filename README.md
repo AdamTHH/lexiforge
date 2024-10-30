@@ -12,5 +12,5 @@ Lexiforge is a game where you can make and combine words as you like.
 
 ## Issues
 
-- Exposed API key
-- App laggy when too many objects dragged out
+- Exposed backend key
+- Image generation takes about 10 seconds, however there is a timeout at 5, so to get an image, drag another object out and start generating again

@@ -11,7 +11,7 @@ async function generateImage(prompt: string) {
 
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 6000);
+    const timeoutId = setTimeout(() => controller.abort(), 9000);
 
     const response = await fetch(url, {
       method: 'POST',
